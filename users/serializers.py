@@ -24,6 +24,12 @@ class PasswordsNotEqual(APIException):
     default_code = 'passwords_not_equal'
 
 
+class UserDoesNotExist(APIException):
+    status_code = 400
+    default_detail = 'Client does not exist'
+    default_code = 'client does not exist'
+
+
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         style={'input_type': 'password'}, write_only=True
@@ -130,3 +136,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'email', 'first_name', 'last_name', 'middle_name', 'avatar', 'date_of_birth', 'gender',
                   'date_joined', 'points', 'rank', 'user_name')
+
+
+class EmailSerializer(serializers.Serializer):
+    email = serializers.EmailField()
