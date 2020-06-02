@@ -101,4 +101,5 @@ class ProfileAPIView(generics.RetrieveUpdateAPIView):
     serializer_class = ProfileSerializer
 
     def get_object(self):
+        # print("from user")
         return self.request.user
