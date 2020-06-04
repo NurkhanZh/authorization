@@ -11,6 +11,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from rest_framework.authtoken.models import Token
+from rest_framework.parsers import MultiPartParser
 
 from users.serializers import UserRegistrationSerializer, AuthTokenSerialzier, ProfileSerializer, EmailSerializer, \
     UserDoesNotExist
@@ -36,6 +37,7 @@ class UserRegistrationView(generics.CreateAPIView):
 
 class SendEmailMessage(generics.RetrieveAPIView):
     serializer_class = EmailSerializer
+    permission_classes = (AllowAny, )
 
     def get(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -67,10 +69,10 @@ class SendEmailMessage(generics.RetrieveAPIView):
             return Response({'error': "Message did not send"})
 
 
-class ActivateUserAPIView(generics.UpdateAPIView):
+class ActivateUserAPIView(generics.RetrieveAPIView):
     permission_classes = (AllowAny,)
 
-    def update(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         uidb64 = kwargs.pop('uidb64')
         token = kwargs.pop('token')
         try:
