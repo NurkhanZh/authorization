@@ -139,11 +139,11 @@ AUTH_USER_MODEL = "users.User"
 
 STATIC_URL = '/static/'
 
-EMAIL_HOST = 'smtp.yandex.kz'
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 465
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 MAILER_EMAIL_BACKEND = EMAIL_BACKEND
-EMAIL_HOST_USER = 'csse1606@yandex.kz'
-EMAIL_HOST_PASSWORD = 'iituasd01'
+EMAIL_HOST_USER = "nurik9293709@gmail.com"
+EMAIL_HOST_PASSWORD = 'lizrijhlnmectwvg'
 EMAIL_USE_SSL = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
