@@ -1,7 +1,6 @@
 {
     "apps": [
         {
-            "name": "Python VENV",
             "cwd": "/var/www/authorization",
             "script": "venv/bin/activate",
             "exec_mode": "fork",
