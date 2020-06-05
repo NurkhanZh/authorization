@@ -1,15 +1,9 @@
 {
     "apps": [
         {
-            "cwd": "/var/www/authorization",
-            "script": "venv/bin/activate",
-            "exec_mode": "fork",
-            "exec_interpreter": "source"
-        },
-        {
             "name": "Auth",
             "cwd": "/var/www/authorization",
-            "args": "runserver",
+            "args": "runserver 3000",
             "script": "manage.py",
             "exec_mode": "fork",
             "exec_interpreter": "python3"
