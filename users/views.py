@@ -49,7 +49,6 @@ class SendEmailMessage(generics.RetrieveAPIView):
             raise UserDoesNotExist
         mail_subject = 'Activate your account.'
         current_site = get_current_site(request)
-        print('fisking you')
         pprint(current_site.domain)
         pprint(urlsafe_base64_encode(force_bytes(user.id)))
         message = render_to_string('acc_activate.html', {
@@ -65,7 +64,8 @@ class SendEmailMessage(generics.RetrieveAPIView):
         try:
             email.send()
             return Response({'success': "Message sent"})
-        except Exception:
+        except Exception as e:
+            pprint(e)
             return Response({'error': "Message did not send"})
 
 

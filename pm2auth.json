@@ -1,0 +1,19 @@
+{
+    "apps": [
+        {
+            "name": "Python VENV",
+            "cwd": "/var/www/authorization",
+            "script": "venv/bin/activate",
+            "exec_mode": "fork",
+            "exec_interpreter": "source"
+        },
+        {
+            "name": "Auth",
+            "cwd": "/var/www/authorization",
+            "args": "runserver",
+            "script": "manage.py",
+            "exec_mode": "fork",
+            "exec_interpreter": "python3"
+        }
+    ]
+}
