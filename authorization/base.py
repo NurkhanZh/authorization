@@ -22,9 +22,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'xzyr#ak3$nomtopgrq20e&yh$2u)r4=$1n5u05g%a$iz%-#u-b'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
 
-ALLOWED_HOSTS = ["auth.autochess.kz"]
+
+ALLOWED_HOSTS = []
 
 # Application definition
 
