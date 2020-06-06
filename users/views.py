@@ -1,6 +1,7 @@
 from pprint import pprint
 
 from django.core.mail import EmailMessage
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth import get_user_model
 from django.template.loader import render_to_string
@@ -37,7 +38,7 @@ class UserRegistrationView(generics.CreateAPIView):
 
 class SendEmailMessage(generics.RetrieveAPIView):
     serializer_class = EmailSerializer
-    permission_classes = (AllowAny, )
+    permission_classes = (AllowAny,)
 
     def get(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -83,7 +84,7 @@ class ActivateUserAPIView(generics.RetrieveAPIView):
         if user is not None and account_activation_token.check_token(user, token):
             user.is_active = True
             user.save()
-            return Response({'success': 'Client is successfully activated'}, status=status.HTTP_200_OK)
+            return HttpResponseRedirect(redirect_to="http://autochess.kz/")
         return Response({'error': 'Client cant activated'}, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -105,3 +106,9 @@ class ProfileAPIView(generics.RetrieveUpdateAPIView):
     def get_object(self):
         # print("from user")
         return self.request.user
+
+
+class ResetAPIView(generics.DestroyAPIView):
+
+    def get_object(self):
+        return User.objects.all()

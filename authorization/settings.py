@@ -25,7 +25,7 @@ SECRET_KEY = 'xzyr#ak3$nomtopgrq20e&yh$2u)r4=$1n5u05g%a$iz%-#u-b'
 DEBUG = False
 
 ALLOWED_HOSTS = ["auth.autochess.kz"]
-
+# ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
