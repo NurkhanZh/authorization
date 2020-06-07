@@ -136,6 +136,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
+CORS_ORIGIN_ALLOW_ALL = True
+
 AUTH_USER_MODEL = "users.User"
 
 STATIC_URL = '/static/'
