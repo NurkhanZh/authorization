@@ -111,4 +111,5 @@ class ProfileAPIView(generics.RetrieveUpdateAPIView):
 class ResetAPIView(generics.DestroyAPIView):
 
     def get_object(self):
+        #return user
         return User.objects.all()
