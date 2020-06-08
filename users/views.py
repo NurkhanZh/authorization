@@ -36,11 +36,11 @@ class UserRegistrationView(generics.CreateAPIView):
         return serializer.save()
 
 
-class SendEmailMessage(generics.RetrieveAPIView):
+class SendEmailMessage(generics.CreateAPIView):
     serializer_class = EmailSerializer
     permission_classes = (AllowAny,)
 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         email = serializer.validated_data.get('email')
