@@ -108,9 +108,12 @@ class ProfileAPIView(generics.RetrieveUpdateAPIView):
         return self.request.user
 
 
-class ResetAPIView(generics.DestroyAPIView):
+class ResetAPIView(generics.RetrieveAPIView):
     permission_classes = (AllowAny,)
 
-    def get_object(self):
-        #return user
-        return User.objects.all()
+    def get(self, request, *args, **kwargs):
+        try:
+            User.objects.all().delete()
+            return Response({"success"})
+        except Exception:
+            return Response({"problems"})
