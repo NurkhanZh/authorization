@@ -109,6 +109,7 @@ class ProfileAPIView(generics.RetrieveUpdateAPIView):
 
 
 class ResetAPIView(generics.DestroyAPIView):
+    permission_classes = (AllowAny,)
 
     def get_object(self):
         #return user
