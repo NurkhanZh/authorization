@@ -128,6 +128,19 @@ class ResetPasswordAPIView(generics.UpdateAPIView):
 
     def update(self, request, *args, **kwargs):
         obj = self.get_object()
+        mail_subject = 'Your password changed.'
+        message = render_to_string('reset_password.html', {
+            'user': obj,
+        })
+        email = EmailMessage(
+            mail_subject, message, to=[obj.email]
+        )
+        try:
+            email.send()
+        except Exception as e:
+            pprint(e)
+            return Response({"error": "password not changed"})
+
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data
