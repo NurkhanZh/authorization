@@ -1,4 +1,5 @@
 from pprint import pprint
+import hashlib
 
 from django.core.mail import EmailMessage
 from django.http import HttpResponseRedirect
@@ -12,10 +13,10 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from rest_framework.authtoken.models import Token
-from rest_framework.parsers import MultiPartParser
+
 
 from users.serializers import UserRegistrationSerializer, AuthTokenSerialzier, ProfileSerializer, EmailSerializer, \
-    UserDoesNotExist
+    UserDoesNotExist, PasswordChangeSerializer
 from users.token import account_activation_token
 
 User = get_user_model()
@@ -117,3 +118,23 @@ class ResetAPIView(generics.RetrieveAPIView):
             return Response({"success"})
         except Exception:
             return Response({"problems"})
+
+
+class ResetPasswordAPIView(generics.UpdateAPIView):
+    serializer_class = PasswordChangeSerializer
+
+    def get_object(self):
+        return self.request.user
+
+    def update(self, request, *args, **kwargs):
+        obj = self.get_object()
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        validated_data = serializer.validated_data
+        response = {}
+        if obj.check_password(validated_data.get("new_password")):
+            obj.set_password(validated_data.get("new_password"))
+            response["ok"] = "password changed"
+        else:
+            response["error"] = "password not changed"
+        return Response(response)

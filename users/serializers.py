@@ -134,9 +134,14 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'email', 'first_name', 'last_name', 'middle_name', 'avatar', 'date_of_birth', 'gender',
-                  'date_joined', 'points', 'rank', 'user_name')
+        fields = ('email', 'first_name', 'last_name', 'middle_name', 'avatar', 'date_of_birth', 'gender',
+                  'points', 'rank', 'user_name')
 
 
 class EmailSerializer(serializers.Serializer):
     email = serializers.EmailField()
+
+
+class PasswordChangeSerializer(serializers.Serializer):
+    old_password = serializers.CharField(max_length=128)
+    new_password = serializers.CharField(max_length=128)
