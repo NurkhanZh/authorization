@@ -32,7 +32,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_of_birth = models.DateField(blank=True, null=True)
     gender = models.SmallIntegerField(choices=GENDERS, default=UNDEFINED)
     date_joined = models.DateTimeField('Дата регистрации', auto_now_add=True)
-    points = models.IntegerField(default=100, help_text='Очки')
+    points = models.IntegerField(default=1000, help_text='Очки')
     rank = models.SmallIntegerField(choices=RANK, default=I)
     is_active = models.BooleanField(default=False)
 
