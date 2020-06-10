@@ -80,8 +80,6 @@ class AuthTokenSerialzier(serializers.Serializer):
         password = attrs.get('password')
 
         if username and password:
-            # user = authenticate(request=self.context.get('request'),
-            #                     phone=username, password=password)
             try:
                 username_field = User.USERNAME_FIELD
                 user = User.objects.get(**{username_field: username})
@@ -92,7 +90,7 @@ class AuthTokenSerialzier(serializers.Serializer):
                 msg = 'Unable to log in with provided credentials.'
                 raise serializers.ValidationError(msg, code='authorization')
             if not user.is_active:
-                msg = "Activate phone"
+                msg = "Activate your account. Check your email."
                 raise serializers.ValidationError(detail={
                     User.USERNAME_FIELD: [msg]
                 })
