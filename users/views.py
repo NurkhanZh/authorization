@@ -16,7 +16,7 @@ from rest_framework.authtoken.models import Token
 
 from authorization import settings
 from users.serializers import UserRegistrationSerializer, AuthTokenSerialzier, ProfileSerializer, EmailSerializer, \
-    UserDoesNotExist, PasswordChangeSerializer
+    UserDoesNotExist
 from users.token import account_activation_token
 
 User = get_user_model()
@@ -123,16 +123,17 @@ class ResetAPIView(generics.RetrieveAPIView):
 
 
 class ResetPasswordAPIView(generics.UpdateAPIView):
-    serializer_class = PasswordChangeSerializer
 
     def get_object(self):
         return self.request.user
 
     def update(self, request, *args, **kwargs):
+        password = "Password!"
         obj = self.get_object()
         mail_subject = 'Your password changed.'
         message = render_to_string('reset_password.html', {
             'user': obj,
+            "password": password
         })
         email = EmailMessage(
             mail_subject, message, to=[obj.email]
@@ -143,13 +144,11 @@ class ResetPasswordAPIView(generics.UpdateAPIView):
             pprint(e)
             return Response({"error": "password not changed"})
 
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        validated_data = serializer.validated_data
         response = {}
-        if obj.check_password(validated_data.get("new_password")):
-            obj.set_password(validated_data.get("new_password"))
-            response["ok"] = "password changed"
-        else:
-            response["error"] = "password not changed"
+        try:
+            obj.set_password(password)
+            obj.save()
+        except Exception as e:
+            print(e)
+        response["ok"] = "password changed"
         return Response(response)
