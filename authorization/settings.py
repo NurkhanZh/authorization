@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'xzyr#ak3$nomtopgrq20e&yh$2u)r4=$1n5u05g%a$iz%-#u-b'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+# DEBUG = False
 #
 ALLOWED_HOSTS = ["auth.autochess.kz"]
 # ALLOWED_HOSTS = []
@@ -119,7 +119,11 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 20
 }
-
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = "/media/"
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 

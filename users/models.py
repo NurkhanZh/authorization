@@ -28,7 +28,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     middle_name = models.CharField(max_length=150, help_text='Отчество', null=True, blank=True)
     user_name = models.CharField(max_length=100, help_text='Ник')
 
-    avatar = models.ImageField(null=True, blank=True, default="static/photo/user_default.jpeg", upload_to="static/photo")
+    avatar = models.ImageField(null=True, blank=True, default="user_default.jpeg", upload_to="static/photo")
     date_of_birth = models.DateField(blank=True, null=True)
     gender = models.SmallIntegerField(choices=GENDERS, default=UNDEFINED)
     date_joined = models.DateTimeField('Дата регистрации', auto_now_add=True)
