@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
+from django.db.models.signals import post_save, pre_save
+from django.dispatch import receiver
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -41,3 +43,25 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return f'{self.email}'
+
+
+class FileModel(models.Model):
+    file = models.FileField(null=True, upload_to="media/files")
+    bin_file = models.BinaryField(null=True)
+    image = models.ImageField(null=True)
+    name = models.CharField(max_length=255, null=True)
+
+# @receiver(post_save, sender=FileModel, dispatch_uid='example_for_signals')
+# def example(sender, instance, update_fields, **kwargs):
+#     print(update_fields)
+#     print(instance)
+#     print(sender)
+#     print(kwargs)
+
+
+class ExampleModel(models.Model):
+    name = models.CharField(max_length=100, db_index=True)
+    age = models.IntegerField(db_index=True)
+    z = models.CharField(max_length=100, default='')
+    y = models.IntegerField(default=0)
+

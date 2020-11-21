@@ -3,6 +3,8 @@ from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import APIException
 
+from .models import FileModel
+
 User = get_user_model()
 
 
@@ -138,4 +140,10 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 class EmailSerializer(serializers.Serializer):
     email = serializers.EmailField()
+
+
+class ExampleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FileModel
+        fields = '__all__'
 

@@ -1,0 +1,49 @@
+version: '3'
+
+volumes:
+  auth_postgres:
+
+services:
+  auth_django:
+    image: auth_django
+    build:
+      context: .
+      dockerfile: compose/local/Dockerfile
+
+    command: /start
+
+    volumes:
+      - .:/app
+
+    env_file:
+      - .venvs/local/.django
+    ports:
+      - "8000:8000"
+#    networks:
+#      masternet:
+#        aliases:
+#          - authorization
+#      db:
+#      app:
+
+    depends_on:
+      - auth_postgres
+
+  auth_postgres:
+    image: postgres:10.5
+    volumes:
+      - auth_postgres:/var/lib/postgresql/data
+    env_file:
+      - .venvs/local/.postgres
+
+    ports:
+      - 6432:6432
+    command: -p 6432
+#    networks:
+#      - db
+
+#networks:
+#  masternet:
+#    external: true
+#  app: {}
+#  db: {}

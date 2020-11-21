@@ -7,17 +7,22 @@ from django.shortcuts import render
 from django.contrib.auth import get_user_model
 from django.template.loader import render_to_string
 from rest_framework import generics, status
+from rest_framework.parsers import FileUploadParser, MultiPartParser
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from rest_framework.authtoken.models import Token
+from rest_framework.views import APIView
 
 from authorization import settings
+from users.models import FileModel
 from users.serializers import UserRegistrationSerializer, AuthTokenSerialzier, ProfileSerializer, EmailSerializer, \
-    UserDoesNotExist
+    UserDoesNotExist, ExampleSerializer
 from users.token import account_activation_token
+
+from django.contrib.auth import authenticate, logout, login
 
 User = get_user_model()
 
@@ -96,6 +101,14 @@ class AuthTokenAPIView(generics.CreateAPIView):
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+        un = data.get('email')
+        p = data.get('password')
+        user_obj = authenticate(username=un,
+                                password=p)
+        login(request, user_obj, backend='django_auth_ldap.backend.LDAPBackend')
+        data = {'detail': 'User logged in successfully'}
+        return data
         user = serializer.validated_data['user']
         token, created = Token.objects.get_or_create(user=user)
         return Response({'token': token.key})
@@ -152,3 +165,29 @@ class ResetPasswordAPIView(generics.UpdateAPIView):
             print(e)
         response["ok"] = "password changed"
         return Response(response)
+
+
+class ExampleView(generics.CreateAPIView, generics.UpdateAPIView):
+    permission_classes = (AllowAny,)
+    parser_classes = (MultiPartParser,)
+    serializer_class = ExampleSerializer
+    lookup_field = 'pk'
+
+    def get_queryset(self):
+        return FileModel.objects.all()
+
+    def post(self, request, *args, **kwargs):
+
+        return super(ExampleView, self).post(request, *args, **kwargs)
+
+    # def post(self, request, *args, **kwargs):
+    #     print('*'*40)
+    #     f = self.request.FILES['file']
+    #     print(f)
+    #     # for ch in f.chunks():
+    #     #     print(ch)
+    #     f = f.read()
+    #     print(f)
+    #     print(f[0])
+    #     print(f[1])
+    #     return Response('hello')

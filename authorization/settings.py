@@ -11,6 +11,37 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import sys
+import ldap
+from django_auth_ldap.config import LDAPSearch, GroupOfNamesType
+
+AUTH_LDAP_SERVER_URI = "ldap://dc4.hq.bc"
+AUTH_LDAP_AUTHORIZE_ALL_USERS = True
+AUTH_LDAP_BIND_DN = "zhumash_47142@hq.bc"
+AUTH_LDAP_BIND_PASSWORD = "nurkhan_1998"
+# AUTH_LDAP_USER_SEARCH = LDAPSearch(
+#     "ou=users,dc=dc4.hq,dc=bc", ldap.SCOPE_SUBTREE, "(uid=%(user)s)"
+# )
+AUTH_LDAP_USER_DN_TEMPLATE = 'uid=%(user)s,ou=users,dc=dc4.hq,dc=bc'
+AUTH_LDAP_USER_ATTR_MAP = {
+    "first_name": "givenName",
+    "last_name": "sn",
+    "email": "mail",
+}
+
+AUTH_LDAP_GROUP_BASE = "cn=groups,dc=dc4.hq,dc=bc"
+# AUTH_LDAP_REQUIRE_GROUP = "cn=enabled,ou=django,ou=groups,dc=example,dc=com"
+AUTH_LDAP_GROUP_FILTER = "(objectClass=groupOfNames)"
+AUTH_LDAP_GROUP_SEARCH = LDAPSearch(AUTH_LDAP_GROUP_BASE,
+                                    ldap.SCOPE_SUBTREE, AUTH_LDAP_GROUP_FILTER)
+AUTH_LDAP_GROUP_TYPE = GroupOfNamesType(name_attr="cn")
+AUTH_LDAP_USER_FLAGS_BY_GROUP = {
+    'is_staff': 'cn=users,' + AUTH_LDAP_GROUP_BASE,
+    'is_support': 'cn=users,' + AUTH_LDAP_GROUP_BASE,
+    'is_superuser': 'cn=users,' + AUTH_LDAP_GROUP_BASE,
+}
+
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -22,10 +53,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'xzyr#ak3$nomtopgrq20e&yh$2u)r4=$1n5u05g%a$iz%-#u-b'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-DEBUG = False
-ALLOWED_HOSTS = ["auth.autochess.kz"]
-# ALLOWED_HOSTS = []
+DEBUG = True
+# DEBUG = False
+# ALLOWED_HOSTS = ["auth.autochess.kz"]
+ALLOWED_HOSTS = ['0.0.0.0']
 # Application definition
 
 INSTALLED_APPS = [
@@ -78,11 +109,14 @@ WSGI_APPLICATION = 'authorization.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        "ENGINE": os.environ.get("SQL_ENGINE",),
+        "NAME": os.environ.get("POSTGRES_DB"),
+        "USER": os.environ.get("POSTGRES_USER"),
+        "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
+        "HOST": os.environ.get("POSTGRES_HOST"),
+        "PORT": os.environ.get("POSTGRES_PORT"),
     }
 }
 
@@ -150,7 +184,11 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 465
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 MAILER_EMAIL_BACKEND = EMAIL_BACKEND
-EMAIL_HOST_USER = "nurik9293709@gmail.com"
-EMAIL_HOST_PASSWORD = 'lizrijhlnmectwvg'
+EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
+EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
 EMAIL_USE_SSL = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+AUTHENTICATION_BACKENDS = [
+    'django_auth_ldap.backend.LDAPBackend'
+]
